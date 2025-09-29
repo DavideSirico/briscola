@@ -1,0 +1,8 @@
+backend/node_modules
+backend/pnpm-lock.yaml
+
+frontend/node_modules
+frontend/pnpm-lock.yaml
+frontend/dist
+
+init.sql

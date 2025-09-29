@@ -1,0 +1,67 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3101:3001"
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      - db
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"
+      - "traefik.enable=true"
+      - "traefik.http.routers.briscola.rule=Host(`briscola.sirico.dev`)"
+      - "traefik.http.routers.briscola.entrypoints=websecure"
+      - "traefik.http.routers.briscola.tls=true"
+      - "traefik.http.routers.briscola.tls.certresolver=cloudflare"
+    networks:
+      - web
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3100:3000"
+    environment:
+      - VITE_API_URL=http://backend:3001
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"
+    networks:
+      - web
+
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=gamedb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5433:5432"
+    networks:
+      - web
+
+
+volumes:
+  postgres_data:
+
+
+
+networks:
+  web:
+    external: true
+    name: traefik_default
