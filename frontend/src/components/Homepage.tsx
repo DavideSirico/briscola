@@ -152,22 +152,27 @@ export default function Homepage() {
           >
             {isConnecting ? "Creating..." : "Create Lobby"}
           </button>
-          <input
-            type="text"
-            placeholder="Enter lobby code"
-            value={lobbyCode}
-            onChange={(e) => setLobbyCode(e.target.value)}
-            className="player-input"
-            id="lobbyCode"
-            disabled={isConnecting}
-          />
-          <button
-            onClick={joinLobby}
-            className="join-lobby-btn"
-            disabled={!playerName.trim() || !lobbyCode.trim() || isConnecting}
+          <div
+          className="lobby-container"
           >
-            {isConnecting ? "Joining..." : "Join Lobby"}
-          </button>
+
+            <input
+              type="text"
+              placeholder="Enter lobby code"
+              value={lobbyCode}
+              onChange={(e) => setLobbyCode(e.target.value)}
+              className="player-input"
+              id="lobbyCode"
+              disabled={isConnecting}
+            />
+            <button
+              onClick={joinLobby}
+              className="join-lobby-btn"
+              disabled={!playerName.trim() || !lobbyCode.trim() || isConnecting}
+            >
+              {isConnecting ? "Joining..." : "Join Lobby"}
+            </button>
+          </div>
 
         </div>
       </div>

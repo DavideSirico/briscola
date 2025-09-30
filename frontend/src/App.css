@@ -5,6 +5,7 @@
   justify-content: space-between;
   width: 100vw;
 }
+
 .top {
   display: flex;
   flex-direction: column;
@@ -23,11 +24,11 @@
   height: 33%;
   display: flex;
   flex-direction: column;
-  justify-content:flex-end;
+  justify-content: flex-end;
   align-items: center;
 }
 
-.cards-container{
+.cards-container {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -65,6 +66,7 @@
   margin-bottom: 2rem;
   font-size: 2.5rem;
 }
+
 .player-setup {
   display: flex;
   flex-direction: column;
@@ -86,7 +88,8 @@
   border-color: #333;
 }
 
-.create-lobby-btn, .join-lobby-btn {
+.create-lobby-btn,
+.join-lobby-btn {
   padding: 12px 24px;
   border: none;
   border-radius: 5px;
@@ -96,6 +99,11 @@
   transition: all 0.3s;
   margin-bottom: 3%;
 }
+
+.join-lobby-btn {
+  width: 45%;
+}
+
 .create-lobby-btn {
   background: #333;
   color: white;
@@ -106,6 +114,7 @@
   background: #252525;
   transform: translateY(-2px);
 }
+
 .join-lobby-btn {
   background: #38a169;
   color: white;
@@ -116,9 +125,21 @@
   transform: translateY(-2px);
 }
 
-.create-lobby-btn:disabled, .join-lobby-btn:disabled {
+.create-lobby-btn:disabled,
+.join-lobby-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.lobby-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#lobbyCode {
+  width: 45%;
 }
 
 /* Game Styles */
@@ -172,6 +193,7 @@
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -301,7 +323,8 @@
   flex-wrap: wrap;
 }
 
-.new-game-btn, .home-btn {
+.new-game-btn,
+.home-btn {
   padding: 12px 24px;
   border: none;
   border-radius: 8px;
@@ -339,23 +362,42 @@
   .game-over-title {
     font-size: 2rem;
   }
-  
+
   .winner-text {
     font-size: 1.5rem;
   }
-  
+
   .game-actions {
     flex-direction: column;
     align-items: center;
   }
-  
-  .new-game-btn, .home-btn {
+
+  .new-game-btn,
+  .home-btn {
     width: 100%;
     max-width: 200px;
   }
-  
-  .score-table th, .score-table td {
+
+  .score-table th,
+  .score-table td {
     padding: 8px 10px;
     font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .lobby-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 5%;
+  }
+
+  #lobbyCode {
+    width: 91%;
+  }
+
+  .join-lobby-btn {
+    width: 100%;
   }
 }
