@@ -4,27 +4,31 @@ import type { Request, Response } from "express";
 import { createServer } from "http";
 import { Server, Socket } from "socket.io";
 
-import type { Card, Game, Suit, Player } from "./types.ts";
+import type { Card, Game, Player } from "./types.ts";
 import { getDeck, dealInitialHands, determineRoundWinner, dealNewCards } from "./utils.js"
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-
 const server = createServer(app);
 const io = new Server(server, {
+  path: '/socket.io',
   cors: {
-    origin: "*",
-    methods: ["GET", "POST"]
-  }
+    origin: ["http://localhost:3001", "http://server1:5173", "https://briscola.sirico.dev"], // frontend URLs
+    methods: ["GET", "POST"],
+    allowedHeaders: ["*"],
+    credentials: true
+  },
+  allowEIO3: true,
+  transports: ['websocket', 'polling']
 });
 
 
 let games: Game[] = [];
-// Track socket to player mapping
+
 const socketPlayerMap = new Map<string, { gameId: number, playerName: string }>();
 
-// WebSocket connection handling
+
 io.on('connection', (socket: Socket) => {
   console.log('A user connected:', socket.id);
   
@@ -319,7 +323,6 @@ io.on('connection', (socket: Socket) => {
     }
   });
 
-  
   socket.on('disconnect', () => {
     console.log('User disconnected:', socket.id);
     // Clean up the socket-to-player mapping
@@ -327,18 +330,10 @@ io.on('connection', (socket: Socket) => {
   });
 });
 
-// Legacy REST endpoints (kept for compatibility, but WebSocket is preferred)
-app.post("/api/cards", (req: Request, res: Response) => {
-  console.log("Received card:", req.body);
-  res.json({card: req.body });
-});
-
 // Simple health check endpoint
 app.get("/api/health", (req: Request, res: Response) => {
   res.json({ status: "Server is running", gamesCount: games.length });
 });
-
-
 
 const PORT = 3001;
 server.listen(PORT, () => {

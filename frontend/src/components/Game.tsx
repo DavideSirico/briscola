@@ -4,7 +4,7 @@ import { Socket } from "socket.io-client";
 import { socketService } from "../services/socketService";
 import Pozzo from "./Pozzo";
 import CardComponent from "./CardComponent";
-import type { Card } from "../types";
+import type { Card } from "@shared/types";
 
 export default function Game() {
   const { lobbyId, userName } = useParams<{lobbyId: string, userName: string}>();
@@ -28,7 +28,6 @@ export default function Game() {
 
     const initializeGame = async () => {
       try {
-        // Use the shared socket service
         const socket = await socketService.connect();
         socketRef.current = socket;
 
@@ -136,10 +135,8 @@ export default function Game() {
 
     initializeGame();
 
-    // Cleanup function - but don't disconnect the shared socket
     return () => {
       if (socketRef.current) {
-        // Remove only our event listeners
         socketRef.current.off('game-state');
         socketRef.current.off('game-state-update');
         socketRef.current.off('round-complete');
@@ -165,7 +162,6 @@ export default function Game() {
 
     console.log("Playing card:", card);
     
-    // Send card play through WebSocket
     if (socketRef.current) {
       socketRef.current.emit('play-card', {
         gameId: Number(lobbyId),
@@ -256,9 +252,9 @@ export default function Game() {
         <h2>Game {lobbyId ? `- Lobby: ${lobbyId}` : ""}</h2>
         <div className="game-status">
           <p>Players: {playersCount}/2</p>
-          {briscola ? <CardComponent card={briscola} /> : <CardComponent />}
           <p>{gameMessage}</p>
           {roundInProgress && <p>Round in progress...</p>}
+          {briscola && <CardComponent card={briscola} />}
         </div>
       </div>
       
