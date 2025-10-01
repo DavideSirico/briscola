@@ -1,45 +1,49 @@
 services:
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: backend/Dockerfile
     ports:
       - "3101:3001"
     environment:
       - NODE_ENV=production
     volumes:
-      - ./backend:/app
       - /app/node_modules
     depends_on:
       - db
     labels:
       - "com.centurylinklabs.watchtower.enable=false"
       - "traefik.enable=true"
-      - "traefik.http.routers.briscola.rule=Host(`briscola.sirico.dev`)"
-      - "traefik.http.routers.briscola.entrypoints=websecure"
-      - "traefik.http.routers.briscola.tls=true"
-      - "traefik.http.routers.briscola.tls.certresolver=cloudflare"
+      - "traefik.http.routers.briscola-api.rule=Host(`briscola.sirico.dev`) && (PathPrefix(`/api`) || PathPrefix(`/socket.io`))"
+      - "traefik.http.routers.briscola-api.entrypoints=websecure"
+      - "traefik.http.routers.briscola-api.tls=true"
+      - "traefik.http.routers.briscola-api.tls.certresolver=cloudflare"
+      - "traefik.http.routers.briscola-api.service=briscola-api"
+      - "traefik.http.routers.briscola-api.priority=10"
+      - "traefik.http.services.briscola-api.loadbalancer.server.port=3001"
     networks:
       - web
 
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: frontend/Dockerfile
     ports:
       - "3100:3000"
-    environment:
-      - VITE_API_URL=http://backend:3001
     volumes:
-      - ./frontend:/app
       - /app/node_modules
     depends_on:
       - backend
     labels:
       - "com.centurylinklabs.watchtower.enable=false"
+      - "traefik.enable=true"
+      - "traefik.http.routers.briscola.rule=Host(`briscola.sirico.dev`) && !PathPrefix(`/api`) && !PathPrefix(`/socket.io`)"
+      - "traefik.http.routers.briscola.entrypoints=websecure"
+      - "traefik.http.routers.briscola.tls=true"
+      - "traefik.http.routers.briscola.tls.certresolver=cloudflare"
+      - "traefik.http.routers.briscola.priority=1"
     networks:
       - web
-
 
   db:
     image: postgres:15-alpine
@@ -55,11 +59,8 @@ services:
     networks:
       - web
 
-
 volumes:
   postgres_data:
-
-
 
 networks:
   web:

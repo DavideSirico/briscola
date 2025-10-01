@@ -1,4 +1,5 @@
-import type { Card } from "../types"
+import type { Card } from "@shared/types";
+import card_back_01 from "../assets/card_back_01.svg"
 
 type CardProps = {
   card?: Card,
@@ -22,37 +23,25 @@ export default function CardComponent({ card, selectCard }: CardProps) {
   if(card == undefined) {
     return (
       <div>
-      <svg>
-        <rect
-          x="100"
-          y="20"
-          width="100"
-          height="60"
-          rx="15"
-          ry="15"
-          fill="white"
-          stroke="black"
-          strokeWidth="2"
-        />
-      </svg>
-    </div>
+        <img width="138px" height="200px" src={card_back_01}></img>
+      </div>
     )
   }
   return (
     <div onClick={() => selectCard && selectCard(card)}>
       <svg>
         <rect
-          x="100"
-          y="20"
-          width="100"
-          height="60"
+          x="10"
+          y="10"
+          width="138px"
+          height="200px"
           rx="15"
           ry="15"
           fill={getColor(card)}
           stroke="black"
           strokeWidth="2"
         />
-        <text x="150" y="50" fill="black">{card.rank}</text>
+        <text x="10" y="10" fill="black">{card.rank}</text>
       </svg>
     </div>
   );

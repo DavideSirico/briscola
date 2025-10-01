@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Socket } from "socket.io-client";
 import { socketService } from "../services/socketService";
@@ -9,12 +9,6 @@ export default function Homepage() {
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const navigate = useNavigate();
   const socketRef = useRef<Socket | null>(null);
-
-  // Cleanup socket on component unmount
-  useEffect(() => {
-    return () => {
-    };
-  }, []);
 
   const createLobby = async () => {
     if (!playerName.trim()) {
@@ -80,7 +74,6 @@ export default function Homepage() {
     setIsConnecting(true);
 
     try {
-      // Use the shared socket service
       const socket = await socketService.connect();
       socketRef.current = socket;
 
@@ -135,7 +128,7 @@ export default function Homepage() {
   return (
     <div className="homepage">
       <div className="homepage-container">
-        <h1>Briscola Game</h1>
+        <h1>Briscola</h1>
         <div className="player-setup">
           <input
             type="text"

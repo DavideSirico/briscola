@@ -3,13 +3,13 @@ FROM node:24-alpine
 WORKDIR /app
 
 # Copy package files
-COPY package.json pnpm-lock.yaml ./
+COPY backend/package.json backend/pnpm-lock.yaml ./
 
 # Install pnpm and dependencies
 RUN npm install -g pnpm && pnpm install
 
-# Copy source code
-COPY . .
+COPY shared ./shared
+COPY backend ./
 
 EXPOSE 3001
 

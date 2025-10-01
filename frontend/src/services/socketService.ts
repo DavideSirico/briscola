@@ -26,10 +26,23 @@ class SocketService {
 
       this.isConnecting = true;
 
-      this.socket = io('http://localhost:3001', {
-        transports: ['websocket'],
-        upgrade: true,
-      });
+      const options: Partial<import('socket.io-client').ManagerOptions & import('socket.io-client').SocketOptions> = {
+        path: '/socket.io',
+        // Prefer polling first (friendlier to proxies like Traefik/Cloudflare), then upgrade to websocket
+        transports: ['polling', 'websocket'],
+        autoConnect: true,
+        reconnection: true,
+        reconnectionAttempts: 10,
+        reconnectionDelay: 1000,
+        timeout: 20000,
+        withCredentials: true,
+        forceNew: false,
+      };
+
+      const apiUrl = import.meta.env.PROD
+        ? 'https://briscola.sirico.dev'
+        : 'http://localhost:3000';
+      this.socket = io(apiUrl, options);
 
       this.socket.on('connect', () => {
         console.log('Socket connected:', this.socket?.id);

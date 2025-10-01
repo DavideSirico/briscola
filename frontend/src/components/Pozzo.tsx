@@ -1,5 +1,5 @@
 import CardComponent from "./CardComponent";
-import type { Card } from '../types'
+import type { Card } from '@shared/types';
 
 type PlayedCard = {
   player: string;
@@ -16,10 +16,9 @@ export default function Pozzo({ cards }: PozzoProps) {
       className="pozzo"
       style={{
         border: "2px dashed black",
-        padding: "20px",
-        margin: "20px",
         textAlign: "center",
-        minHeight: "120px",
+        height: "30%",
+        width: "30%"
       }}
     >
       <p>Pozzo (Played Cards)</p>

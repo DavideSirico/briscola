@@ -3,17 +3,19 @@ FROM node:24-alpine
 WORKDIR /app
 
 # Copy package files
-COPY package.json pnpm-lock.yaml ./
+COPY frontend/package.json frontend/pnpm-lock.yaml ./
 
 # Install pnpm and dependencies
 RUN npm install -g pnpm && pnpm install
 
-# Copy source code
-COPY . .
+COPY shared ./shared
+COPY frontend ./ 
+
+# Set environment to production
+ENV NODE_ENV=production
 
 # Build the application
-RUN pnpm build
-
+RUN pnpm build --mode production
 # Install serve to serve the built files
 RUN npm install -g serve
 
