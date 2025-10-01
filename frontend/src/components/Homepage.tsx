@@ -29,11 +29,11 @@ export default function Homepage() {
         console.log('Lobby created:', data);
         localStorage.setItem('playerName', playerName);
         setIsConnecting(false);
-        
+
         // Clean up listeners
         socket.off('lobby-created', onLobbyCreated);
         socket.off('error', onError);
-        
+
         navigate(`/game/${data.lobbyId}/${encodeURIComponent(playerName)}`);
       };
 
@@ -41,7 +41,7 @@ export default function Homepage() {
         console.error('Error creating lobby:', error);
         alert(error.message || "Failed to create lobby");
         setIsConnecting(false);
-        
+
         // Clean up listeners
         socket.off('lobby-created', onLobbyCreated);
         socket.off('error', onError);
@@ -82,18 +82,18 @@ export default function Homepage() {
         console.log('Joined lobby:', data);
         localStorage.setItem('playerName', playerName);
         setIsConnecting(false);
-        
+
         // Clean up listeners
         socket.off('lobby-joined', onLobbyJoined);
         socket.off('error', onError);
-        
+
         navigate(`/game/${lobbyCode}/${encodeURIComponent(playerName)}`);
       };
 
       const onError = (error: { message: string }) => {
         console.error('Error joining lobby:', error);
         let errorMessage = "Failed to join lobby";
-        
+
         if (error.message === "Game not found") {
           errorMessage = "Lobby not found. Please check the lobby code.";
         } else if (error.message === "Game is full") {
@@ -101,10 +101,10 @@ export default function Homepage() {
         } else if (error.message) {
           errorMessage = error.message;
         }
-        
+
         alert(errorMessage);
         setIsConnecting(false);
-        
+
         // Clean up listeners
         socket.off('lobby-joined', onLobbyJoined);
         socket.off('error', onError);
@@ -114,9 +114,9 @@ export default function Homepage() {
       socket.on('error', onError);
 
       // Join the lobby
-      socket.emit('join-lobby', { 
-        lobbyId: Number(lobbyCode), 
-        playerName 
+      socket.emit('join-lobby', {
+        lobbyId: Number(lobbyCode),
+        playerName
       });
     } catch (error) {
       console.error('Failed to connect:', error);
@@ -134,35 +134,39 @@ export default function Homepage() {
             type="text"
             placeholder="Enter your name"
             value={playerName}
+            id="playerName"
             onChange={(e) => setPlayerName(e.target.value)}
             className="player-input"
           />
-        </div>
-        <div className="button-group">
-          <button 
-            onClick={createLobby} 
+          <button
+            onClick={createLobby}
             className="create-lobby-btn"
             disabled={!playerName.trim() || isConnecting}
           >
             {isConnecting ? "Creating..." : "Create Lobby"}
           </button>
-          <div>
+          <div
+          className="lobby-container"
+          >
+
             <input
               type="text"
               placeholder="Enter lobby code"
               value={lobbyCode}
               onChange={(e) => setLobbyCode(e.target.value)}
-              className=""
+              className="player-input"
+              id="lobbyCode"
               disabled={isConnecting}
             />
-            <button 
-                onClick={joinLobby} 
-                className="join-lobby-btn"
-                disabled={!playerName.trim() || !lobbyCode.trim() || isConnecting}
+            <button
+              onClick={joinLobby}
+              className="join-lobby-btn"
+              disabled={!playerName.trim() || !lobbyCode.trim() || isConnecting}
             >
-                {isConnecting ? "Joining..." : "Join Lobby"}
+              {isConnecting ? "Joining..." : "Join Lobby"}
             </button>
           </div>
+
         </div>
       </div>
     </div>

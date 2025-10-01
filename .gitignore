@@ -6,3 +6,5 @@ frontend/pnpm-lock.yaml
 frontend/dist
 
 init.sql
+
+package-lock.json
